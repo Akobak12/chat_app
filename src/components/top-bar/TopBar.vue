@@ -24,11 +24,21 @@ export default {
   },
   setup() {
     const buttons = ref([
-      { id: "1", picture: "chat.png", route:"/", isHighlighted: false },
-      { id: "2", picture: "settings.png", route:"/settings", isHighlighted: false },
-      { id: "3", picture: "file.png", route:"/friends", isHighlighted: false },
-      { id: "4", picture: "account.png", route:"/profile", isHighlighted: false },
-      { id: "5", picture: "add.png", route:"/servers", isHighlighted: false },
+      { id: "1", picture: "chat.png", route: "/", isHighlighted: false },
+      {
+        id: "2",
+        picture: "settings.png",
+        route: "/settings",
+        isHighlighted: false,
+      },
+      { id: "3", picture: "file.png", route: "/friends", isHighlighted: false },
+      {
+        id: "4",
+        picture: "account.png",
+        route: "/profile",
+        isHighlighted: false,
+      },
+      { id: "5", picture: "add.png", route: "/servers", isHighlighted: false },
     ]);
 
     const toggleHighlight = (button) => {
@@ -40,6 +50,8 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<<<<<<< HEAD
+<style scoped></style>
+=======
+<style scoped></style>
+>>>>>>> 34f5006 (server)
