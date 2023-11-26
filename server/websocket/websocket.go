@@ -60,8 +60,8 @@ func NewSessionManager() *SessionManager {
 }
 
 func (sm *SessionManager) setup() {
-	//set shit up from the db
-	dsn := "postgres://postgres:lolololo@localhost:5432/chat-app?sslmode=disable"
+	//set stuff up from the db
+	dsn := "postgres://kryzanek_samuel_64d3f_z9sdt:FQ5lHUujGng5YyABdJ9lyH6tCBZTsHE2@hosting.ssps.cajthaml.eu:3337/kryzanek_samuel_64d3f_z9sdt_db?sslmode=disable"
 
 	db, err := sql.Open("postgres", dsn)
 	sm.db = db

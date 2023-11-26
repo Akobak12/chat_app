@@ -15,9 +15,8 @@
 </template>
 
 <script>
-import Button from "./Button.vue";
+import Button from "./ButtonComponent.vue";
 import { ref } from "vue";
-
 export default {
   components: {
     Button,
@@ -50,8 +49,4 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
 <style scoped></style>
-=======
-<style scoped></style>
->>>>>>> 34f5006 (server)
