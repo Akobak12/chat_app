@@ -1,9 +1,13 @@
 <template>
   <Chat />
-  <UserProfile 
-  class="absolute -right-80 z-20 transition-transform duration-300" 
-  :class="{'-translate-x-80': userInfo}" @openProfile="viewProfile"
-  :userInfo="userInfo" />
+  <section class="flex absolute right-0">
+    <UserProfile 
+    class=" transition-transform duration-300" 
+    :class="{'translate-x-60': !userInfo}" @openProfile="viewProfile"
+    :userInfo="userInfo" />
+    <div class=" h-screen w-14 z-10 bg-midnight-blue"></div>
+  </section>
+
 </template>
 
 <script>

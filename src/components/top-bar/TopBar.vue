@@ -23,14 +23,14 @@ export default {
   },
   setup() {
     const buttons = ref([
-      { id: "1", picture: "chat.png", route: "/", isHighlighted: false },
+      { id: "1", picture: "chat.png", route: "/chat", isHighlighted: false },
       {
         id: "2",
         picture: "settings.png",
         route: "/settings",
         isHighlighted: false,
       },
-      { id: "3", picture: "file.png", route: "/friends", isHighlighted: false },
+      { id: "3", picture: "file.png", route: "/homepage", isHighlighted: false },
       {
         id: "4",
         picture: "account.png",

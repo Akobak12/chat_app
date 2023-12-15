@@ -15,7 +15,7 @@ module.exports = {
       },
       borderWidth: {
         "12": "12px"
-      }
+      },
     },
   },
   plugins: [],

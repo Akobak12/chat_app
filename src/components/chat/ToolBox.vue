@@ -18,7 +18,7 @@
 <script>
 export default {
   props: {
-    toolBox: String,
+    toolBox: Boolean,
   },
 };
 </script>

@@ -6,10 +6,8 @@
 </template>
 
 <script>
-import TopBar from "../top-bar/TopBar.vue";
 export default {
   props: {
-    username: TopBar.username,
     content: String,
   },
 };

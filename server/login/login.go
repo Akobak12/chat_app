@@ -22,6 +22,7 @@ func LoginHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "Login successful!"})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+
 	}
 }
 

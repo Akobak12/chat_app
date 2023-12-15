@@ -22,11 +22,10 @@
 </template>
 
 <script>
-import { nextTick, ref } from "vue";
+import { inject, nextTick, ref } from "vue";
 import Message from "./MessageComponent.vue";
 import TextBar from "./TextBar.vue";
 import ToolBox from "./ToolBox.vue";
-import { onUnmounted } from "vue";
 
 export default {
   components: {
@@ -36,9 +35,9 @@ export default {
   },
 
   setup() {
-    const messages = ref([]);
+    const websocket = inject("websocket")
 
-    const websocket = new WebSocket("ws://127.0.0.1:3030/ws");
+    const messages = ref([]);
 
     const messageContainer = ref(null);
     const toolBox = ref(false);
@@ -69,27 +68,9 @@ export default {
       toolBox.value = !toolBox.value;
     };
 
-    websocket.onopen = () => {
-      console.log("WebSocket connection established");
-    };
-
     websocket.onmessage = (event) => {
       setMessage(event.data);
     };
-
-    websocket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    websocket.onclose = (event) => {
-      console.log("WebSocket connection closed:", event);
-    };
-
-    onUnmounted(() => {
-      if (websocket.readyState === WebSocket.OPEN) {
-        websocket.close();
-      }
-    });
 
     return { messages, addMessage, messageContainer, toolBox, viewTools };
   },
