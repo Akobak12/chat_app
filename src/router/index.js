@@ -46,10 +46,18 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-  if (!to.meta.disableIfLoggedIn && !localStorage.getItem("isAuth")) {
-    next({ name: 'login' });
+  if (localStorage.getItem('isAuth')) {
+    if (to.name === 'login' || to.name === 'register') {
+      next({ name: 'homepage' });
+    } else {
+      next();
+    }
   } else {
-    next();
+    if (!to.meta.disableIfLoggedIn) {
+      next({ name: 'login' });
+    } else {
+      next();
+    }
   }
 });
 

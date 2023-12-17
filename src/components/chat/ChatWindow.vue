@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { inject, nextTick, ref } from "vue";
+import {  nextTick, ref } from "vue";
 import Message from "./MessageComponent.vue";
 import TextBar from "./TextBar.vue";
 import ToolBox from "./ToolBox.vue";
@@ -35,7 +35,7 @@ export default {
   },
 
   setup() {
-    const websocket = inject("websocket")
+    const websocket = new WebSocket("ws://127.0.0.1:3030/ws");
 
     const messages = ref([]);
 
