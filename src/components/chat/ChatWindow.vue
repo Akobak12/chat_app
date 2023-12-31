@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {  nextTick, ref } from "vue";
+import {  nextTick, ref, inject, onMounted } from "vue";
 import Message from "./MessageComponent.vue";
 import TextBar from "./TextBar.vue";
 import ToolBox from "./ToolBox.vue";
@@ -35,15 +35,14 @@ export default {
   },
 
   setup() {
-    const websocket = new WebSocket("ws://127.0.0.1:3030/ws");
-
+    const websocket = inject("websocket");
     const messages = ref([]);
 
     const messageContainer = ref(null);
     const toolBox = ref(false);
 
     const addMessage = (newMessage) => {
-      websocket.send(newMessage);
+      websocket.value.send(newMessage);
       scrollToBottom();
     };
 
@@ -68,9 +67,15 @@ export default {
       toolBox.value = !toolBox.value;
     };
 
-    websocket.onmessage = (event) => {
+    websocket.value.onmessage = (event) => {
       setMessage(event.data);
     };
+
+    onMounted(() => {
+      websocket.value.onmessage = (event) => {
+        setMessage(event.data);
+      };
+    });
 
     return { messages, addMessage, messageContainer, toolBox, viewTools };
   },

@@ -4,10 +4,10 @@
   >
     <div class="flex justify-center w-screen" v-if="$route.path != '/login' && $route.path != '/register'">
       <img src="./assets/logo.png" class="absolute scale-75 left-6" />
-      <TopBar class="mb-12" />
+      <TopBar :userId="userId" class="mb-12"/>
     </div>
 
-    <router-view v-slot="{ Component }">
+    <router-view v-slot="{ Component }" @updateUserId="setUserId  " >
       <keep-alive>
         <component :is="Component"></component>
       </keep-alive>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { provide, onUnmounted } from "vue";
+import { provide, onUnmounted, ref } from "vue";
 import TopBar from "./components/top-bar/TopBar.vue";
 
 export default {
@@ -25,29 +25,46 @@ export default {
   },
 
   setup() {
-    const websocket = new WebSocket("ws://127.0.0.1:3030/ws");
+    const userId = ref(null);
 
-    websocket.onopen = () => {
-      console.log("WebSocket connection established");
+    const setUserId = (id) => {
+      userId.value = id;
     };
 
-    websocket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
+    if (localStorage.getItem("id") === null){
+      localStorage.setItem("id", "")
+    }
 
-    websocket.onclose = (event) => {
-      console.log("WebSocket connection closed:", event);
-    };
+    const websocket = ref();
+
+    if (localStorage.getItem('isAuth')) {
+      websocket.value = new WebSocket("ws://127.0.0.1:3030/ws");
+
+      websocket.value.onopen = () => {
+        console.log("WebSocket connection established");
+      };
+
+      websocket.value.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      websocket.value.onclose = (event) => {
+        console.log("WebSocket connection closed:", event);
+      };
+      console.log("1", websocket.value)
+    }
+    console.log("2", websocket.value)
+    
 
     onUnmounted(() => {
-      if (websocket.readyState === WebSocket.OPEN) {
-        websocket.close();
+      if (websocket.value.readyState === WebSocket.OPEN) {
+        websocket.value.close();
       }
     });
 
     provide("websocket", websocket);
 
-    return { websocket };
+    return { websocket, userId, setUserId };
   },
 };
 </script>

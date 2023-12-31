@@ -16,14 +16,17 @@
 
 <script>
 import Button from "./ButtonComponent.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 export default {
   components: {
     Button,
   },
-  setup() {
+  props: {
+    userId: Number
+  },
+  setup(props) {
     const buttons = ref([
-      { id: "1", picture: "chat.png", route: "/chat", isHighlighted: false },
+      { id: "1", picture: "chat.png", route: `/chat/${localStorage.getItem("id")}`, isHighlighted: false },
       {
         id: "2",
         picture: "settings.png",
@@ -39,6 +42,13 @@ export default {
       },
       { id: "5", picture: "add.png", route: "/servers", isHighlighted: false },
     ]);
+
+    watch(() => props.userId, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        console.log("dalsdnasjdnsajkldnakldnsajkldn")
+        buttons.value[0].route = `/chat/${newValue}`;
+      }
+    });
 
     const toggleHighlight = (button) => {
       button.isHighlighted = !button.isHighlighted;

@@ -1,10 +1,10 @@
 <template>
-  <router-link :to="route" class="flex flex-col w-24" :class="{ 'highlight-bg': isHighlighted || $route.path == route }">
+  <router-link :to="route" class="flex flex-col w-24" :class="{ 'highlight-bg': isHighlighted || this.$route.path.startsWith(route) }">
     <img :src="require(`../../assets/buttons/${picture}`)" class="relative object-contain top-1/4 h-10 z-10">
     <img
     src="../../assets/buttons/bookmark.png" 
     class="relative object-contain bottom-3 h-16 z-0 transition-transform duration-500" 
-    :class="{ 'highlight translate-y-4': isHighlighted || $route.path == route }">
+    :class="{ 'highlight translate-y-4': isHighlighted || this.$route.path.startsWith(route) }">
   </router-link>
 </template>
 

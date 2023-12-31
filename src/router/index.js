@@ -11,7 +11,7 @@ const routes = [
     redirect: 'login'
   },
   {
-    path: '/chat',
+    path: '/chat/:id',
     name: 'chat',
     component: ChatView,
   },

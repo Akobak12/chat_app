@@ -32,6 +32,7 @@ export default {
           password: credentials.value.password,
         });
         console.log("Login successful:", response);
+        localStorage.setItem("token", response.data.token)
         localStorage.setItem("isAuth", true)
         router.push({ name: "homepage" })
       } catch (error) {
