@@ -13,10 +13,13 @@
 
 <script>
 import axios from "axios";
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
+import router from '@/router';
 
 export default {
   setup() {
+    const registerURL = inject("register")
+
     const credentials = ref({
       username: "",
       email: "",
@@ -25,14 +28,13 @@ export default {
 
     const register = async () => {
       try {
-        const response = await axios.post("http://127.0.0.1:3030/api/register", {
+        const response = await axios.post(registerURL, {
           username: credentials.value.username,
           email: credentials.value.email,
           password: credentials.value.password,
         });
         console.log("register successful:", response);
-        localStorage.setItem("username", credentials.value.username)
-        localStorage.setItem("email", credentials.value.email)
+        router.push({ name: "login" })
       } catch (error) {
         console.error("register failed:", error);
       }

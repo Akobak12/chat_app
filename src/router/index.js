@@ -3,6 +3,8 @@ import ChatView from '../views/ChatView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import Homepage from '../views/HomepageView.vue'
+import Settings from '../views/SettingsView.vue'
+import ServerView from '../views/ServerView.vue'
 
 const routes = [
   {
@@ -14,27 +16,43 @@ const routes = [
     path: '/chat/:id',
     name: 'chat',
     component: ChatView,
+    meta: {
+      requiresAuth: true
+    },
   },
   {
     path: '/login',
     name: 'login',
     component: LoginView,
-    meta: {
-      disableIfLoggedIn: true
-    },
   },
   {
     path: '/register',
     name: 'register',
     component: RegisterView,
-    meta: {
-      disableIfLoggedIn: true
-    },
   },
   {
     path: '/homepage',
     name: 'homepage',
     component: Homepage,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: Settings,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/servers',
+    name: 'servers',
+    component: ServerView,
+    meta: {
+      requiresAuth: true
+    },
   },
 ]
 
@@ -43,22 +61,16 @@ const router = createRouter({
   routes
 })
 
-
-
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('isAuth')) {
-    if (to.name === 'login' || to.name === 'register') {
-      next({ name: 'homepage' });
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem("isAuth") == "false") {
+      next({ name: 'login' })
     } else {
-      next();
+      next() 
     }
   } else {
-    if (!to.meta.disableIfLoggedIn) {
-      next({ name: 'login' });
-    } else {
-      next();
-    }
+    next()
   }
-});
+})
 
 export default router

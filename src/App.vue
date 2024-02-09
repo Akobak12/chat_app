@@ -4,19 +4,17 @@
   >
     <div class="flex justify-center w-screen" v-if="$route.path != '/login' && $route.path != '/register'">
       <img src="./assets/logo.png" class="absolute scale-75 left-6" />
-      <TopBar :userId="userId" class="mb-12"/>
+      <TopBar :chatId="chatId" class="mb-12"/>
     </div>
 
-    <router-view v-slot="{ Component }" @updateUserId="setUserId  " >
-      <keep-alive>
+    <router-view v-slot="{ Component }" @updateUserId="setChatId  " >
         <component :is="Component"></component>
-      </keep-alive>
     </router-view>
   </main>
 </template>
 
 <script>
-import { provide, onUnmounted, ref } from "vue";
+import { provide, ref } from "vue";
 import TopBar from "./components/top-bar/TopBar.vue";
 
 export default {
@@ -25,46 +23,34 @@ export default {
   },
 
   setup() {
-    const userId = ref(null);
+    const chatId = ref(null);
+    const userId = localStorage.getItem("userID")
+    const username = localStorage.getItem("username")
 
-    const setUserId = (id) => {
-      userId.value = id;
+    const register = "http://127.0.0.1:3030/api/register"
+    const login = "http://127.0.0.1:3030/api/login"
+    const logout = "http://127.0.0.1:3030/api/logout"
+    const createRoom = "http://localhost:3030/api/ws/create-room"
+    const joinRoom = ref(`ws://localhost:3030/api/ws/join-room/${chatId.value}?userId=${userId}&username=${username}`)
+    const getRooms = "http://127.0.0.1:3030/ws/get-rooms"
+
+    const setChatId = (id) => {
+      chatId.value = id;
+      joinRoom.value = `ws://localhost:3030/api/ws/join-room/${chatId.value}?userId=${userId}&username=${username}`
     };
 
     if (localStorage.getItem("id") === null){
       localStorage.setItem("id", "")
     }
 
-    const websocket = ref();
+    provide("register", register)
+    provide("login", login)
+    provide("logout", logout)
+    provide("createRoom", createRoom)
+    provide("joinRoom", joinRoom)
+    provide("getRooms", getRooms)
 
-    if (localStorage.getItem('isAuth')) {
-      websocket.value = new WebSocket("ws://127.0.0.1:3030/ws");
-
-      websocket.value.onopen = () => {
-        console.log("WebSocket connection established");
-      };
-
-      websocket.value.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
-
-      websocket.value.onclose = (event) => {
-        console.log("WebSocket connection closed:", event);
-      };
-      console.log("1", websocket.value)
-    }
-    console.log("2", websocket.value)
-    
-
-    onUnmounted(() => {
-      if (websocket.value.readyState === WebSocket.OPEN) {
-        websocket.value.close();
-      }
-    });
-
-    provide("websocket", websocket);
-
-    return { websocket, userId, setUserId };
+    return { chatId, setChatId };
   },
 };
 </script>

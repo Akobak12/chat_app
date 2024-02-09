@@ -22,7 +22,7 @@ export default {
     Button,
   },
   props: {
-    userId: Number
+    chatId: Number
   },
   setup(props) {
     const buttons = ref([
@@ -43,9 +43,8 @@ export default {
       { id: "5", picture: "add.png", route: "/servers", isHighlighted: false },
     ]);
 
-    watch(() => props.userId, (newValue, oldValue) => {
+    watch(() => props.chatId, (newValue, oldValue) => {
       if (newValue !== oldValue) {
-        console.log("dalsdnasjdnsajkldnakldnsajkldn")
         buttons.value[0].route = `/chat/${newValue}`;
       }
     });

@@ -7,7 +7,7 @@
       v-model="newMessage"
       type="text"
       placeholder="message"
-      class="relative top-0 w-4/5 h-auto pl-3 bg-gengar-purple placeholder-white text-white"
+      class="relative top-0 w-4/5 h-auto pl-3 bg-white text-black"
     />
     <button @click="sendMessage" class="h-full mx-5">
       <img
