@@ -1,7 +1,7 @@
 <template>
-  <img src="../assets/logo.png" class="h-32" />
-  <span class="mb-6 text-4xl text-white">Code Chat</span>
-  <form class="flex flex-col items-center justify-between w-1/3 h-3/5 bg-midnight-blue text-white border-8 rounded-md border-clay-purple">
+  <img src="../assets/logo.png" class="h-32 my-6" />
+  <form class="flex flex-col items-center justify-between w-4/5 h-3/5 bg-midnight-blue text-white border-8 rounded-md border-clay-purple
+  sm:w-2/3 md:w-3/5 lg:w-1/3">
     <span class="text-4xl mt-4 mb-8">LOGIN</span>
     <input v-model="credentials.username" type="text" placeholder="Username" />
     <input v-model="credentials.email" type="email" placeholder="Email">

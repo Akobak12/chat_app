@@ -1,6 +1,8 @@
 <template>
-  <nav class="flex justify-start bg-clay-purple w-3/4 h-16 rounded-b-lg">
-    <ul class="flex justify-between w-3/4 h-full pl-24">
+  <nav class="flex justify-start bg-clay-purple h-20 w-full
+  lg:w-3/4 lg:rounded-b-lg lg:h-16">
+    <ul class="flex justify-between w-full h-full pl-24
+    md:w-3/4">
       <Button
         v-for="button in buttons"
         :key="button.id"

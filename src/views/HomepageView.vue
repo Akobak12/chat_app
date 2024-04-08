@@ -1,37 +1,49 @@
 <template>
   <div
-    class="flex justify-center items-center h-4/5 w-3/4 overflow-auto text-white bg-midnight-blue border-8 border-clay-purple"
+    class="flex justify-center items-center h-4/5 w-11/12 mt-12 overflow-auto text-white bg-midnight-blue border-8 border-clay-purple
+    lg:w-3/4"
     @click="closeWindow">
     <!--left bar-->
-    <section class="flex flex-col items-center relative w-2/5 h-full p-1 border-clay-purple border-r-8">
+    <section class="flex flex-col items-center relative w-full h-full p-1 
+    lg:border-clay-purple lg:border-r-8 lg:w-2/5">
       <Chat v-for="chat in chats" :chat="chat" :id="chat.id" :key="chat.id" @click="saveId(chat.id)" class="mb-2"/>
-      <button @click.stop="openInviteWindow" class="absolute bottom-4 text-lg w-1/2 h-12 bg-dragon-purple rounded-xl">invite</button>
+      <div class="flex absolute bottom-4 text-md w-full px-4 pt-4 border-clay-purple border-t-8
+      lg:border-t-0 lg:text-lg">
+        <button @click.stop="openInviteWindow" class="w-full mr-6 h-12 bg-dragon-purple rounded-xl
+        lg:mx-12 xl:mx-24">Invite friends</button>
+        <button @click.stop="create" class="w-full h-12 bg-dragon-purple rounded-xl
+        lg:hidden">Create server</button>
+      </div>
     </section>
     <!--right bar-->
-    <section class="flex justify-between flex-grow h-full p-4">
+    <section class="hidden justify-between flex-grow h-full p-4
+    lg:flex">
       <button @click="logout" class="w-5/12 h-1/5 bg-dragon-purple rounded-lg">Logout</button>
       <button @click.stop="create" class="w-5/12 h-1/5 bg-dragon-purple rounded-lg">Create server</button>
     </section>
     <!--popup windows-->
     <div v-if="invite" class="flex justify-center items-center absolute h-screen w-screen top-0 z-50">
-      <section class="absolute h-3/5 w-1/4 bg-midnight-blue border-clay-purple border-4 rounded-2xl window">
-      <section class="p-1">
-        <Search :placeholder="'Search or add friends'" class="h-12"/>
+      <section class="absolute h-3/5 w-3/4 bg-midnight-blue border-clay-purple border-4 rounded-2xl window
+      lg:w-1/4 md:w-2/4">
+        <section class="p-1">
+          <Search :placeholder="'Search or add friends'" class="h-12"/>
+        </section>
+        <section class="px-4">  
+          <User v-for="user in users" :user="user" :id="user.id" :key="user.id" @click="selectUser(user)" class="mb-2 h-16" :class="{ 'border-clay-purple border-2': user.selected }"/>
+        </section>
+        <section class="bottom-4 absolute w-full">
+          <div class="flex relative items-center mb-4 h-16 w-full bg-[#64416a] border-clay-purple border-y-8"
+          :class="{ 'bg-[#282828]': darkMode }">
+            <Server v-for="server in servers" :server="server" :key="server.id" class="w-fit h-2/3 m-2"/>
+          </div>
+          <button @click="inviteUser()" class="text-lg w-1/2 h-12 bg-dragon-purple rounded-xl">Invite</button>
+        </section>
       </section>
-      <section class="px-4">  
-        <User v-for="user in users" :user="user" :id="user.id" :key="user.id" @click="selectUser(user)" class="mb-2 h-16" :class="{ 'border-clay-purple border-2': user.selected }"/>
-      </section>
-      <section class="bottom-4 absolute w-full">
-        <div class="flex relative items-center mb-4 h-16 w-full bg-[#64416a] border-clay-purple border-y-8">
-          <Server v-for="server in servers" :server="server" :key="server.id" class="w-fit h-2/3 m-2"/>
-        </div>
-        <button @click="inviteUser()" class="text-lg w-1/2 h-12 bg-dragon-purple rounded-xl">Invite</button>
-      </section>
-    </section>
     </div>
     
     <div v-if="server" class="flex justify-center items-center absolute h-screen w-screen top-0 z-50">
-      <section class="flex flex-col items-center absolute h-3/5 w-1/4 py-3 bg-midnight-blue border-clay-purple border-4 rounded-2xl window">
+      <section class="flex flex-col items-center absolute  w-3/4 py-3 bg-midnight-blue border-clay-purple border-4 rounded-2xl window
+      lg:w-1/4 md:w-2/4">
       <h1>Server specs</h1>
       <hr class="bg-clay-purple h-1 w-11/12 mb-4 border-0 rounded-full">
       <section class="px-4 mb-4">
@@ -79,6 +91,7 @@ export default {
     //const getRooms = inject("getRooms")
     const createRoom = inject("createRoom")
     const logoutURL = inject("logout")
+    const darkMode = ref(inject("darkMode"))
 
     const chats = ref([
       {id: "1", name: "ola"},
@@ -179,7 +192,7 @@ export default {
       emit('updateUserId', id);
     }
 
-    return { users, servers, invite, server, privacy, chats, serverName, inviteUser, selectUser, create, openInviteWindow, saveId, loadChats, logout, closeWindow };
+    return { users, servers, invite, server, privacy, chats, serverName, darkMode, inviteUser, selectUser, create, openInviteWindow, saveId, loadChats, logout, closeWindow };
   },
 };
 </script>

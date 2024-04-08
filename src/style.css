@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --midnight-blue: #3a3a67;
+    --midnight-puprle: #190835;
+    --clay-purple: #85648A;
+    --dragon-purple: #2f0136;
+    --btn-highligh: #522c58;
+    --break-line: #684a6c;
+    --gengar-purple: #7979a4;   
+}
+
+.dark {
+    --midnight-blue: #353535;
+    --midnight-puprle: #101010;
+    --clay-purple: #555555;
+    --dragon-purple: #252525; 
+    --btn-highligh: #383838;
+    --break-line: #555555;
+    --gengar-purple: #7979a4; 
+}

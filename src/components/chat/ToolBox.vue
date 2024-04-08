@@ -9,18 +9,25 @@
       <img
         src="../../assets/buttons/vector.png"
         class="scale-75"
-        :class="{ 'rotate-180': toolBox }"
+        :class="{ 'rotate-180': toolBox, 'highlight-dark': darkMode }"
       />
     </button>
   </section>
 </template>
 
 <script>
+import { inject, ref } from 'vue';
 export default {
   props: {
     toolBox: Boolean,
   },
+  setup() {
+    const darkMode = ref(inject("darkMode"))
+
+    return {darkMode}
+  }
 };
 </script>
 
-<style></style>
+<style>
+</style>
