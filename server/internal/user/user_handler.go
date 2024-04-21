@@ -16,40 +16,40 @@ func NewHandler(s Service) *Handler {
 	}
 }
 
-func (h *Handler) CreateUser(c *gin.Context) {
-	var u CreateUserReq
-	if err := c.ShouldBindJSON(&u); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+func (handler *Handler) CreateUser(context *gin.Context) {
+	var userReq CreateUserReq
+	if err := context.ShouldBindJSON(&userReq); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, err := h.Service.CreateUser(c.Request.Context(), &u)
+	res, err := handler.Service.CreateUser(context.Request.Context(), &userReq)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	context.JSON(http.StatusOK, res)
 }
 
-func (h *Handler) Login(c *gin.Context) {
-	var user LoginUserReq
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+func (handler *Handler) Login(context *gin.Context) {
+	var userReq LoginUserReq
+	if err := context.ShouldBindJSON(&userReq); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	u, err := h.Service.Login(c.Request.Context(), &user)
+	userRes, err := handler.Service.Login(context.Request.Context(), &userReq)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.SetCookie("jwt", u.accessToken, 60*60*24, "/", "localhost", false, true)
-	c.JSON(http.StatusOK, u)
+	context.SetCookie("jwt", userRes.AccessToken, 60*60*24, "/", "localhost", false, false)
+	context.JSON(http.StatusOK, userRes) // Return the full user response including the access token
 }
 
-func (h *Handler) Logout(c *gin.Context) {
-	c.SetCookie("jwt", "", -1, "", "", false, true)
-	c.JSON(http.StatusOK, gin.H{"message": "logout successful"})
+func (handler *Handler) Logout(context *gin.Context) {
+	context.SetCookie("jwt", "", -1, "", "", false, true)
+	context.JSON(http.StatusOK, gin.H{"message": "logout successful"})
 }

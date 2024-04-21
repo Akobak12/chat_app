@@ -26,17 +26,21 @@ export default {
 
   setup() {
     const chatId = ref(null);
-    const userId = localStorage.getItem("userID")
-    const username = localStorage.getItem("username")
 
     const darkMode = ref(false)
 
-    const register = "http://127.0.0.1:3030/api/register"
-    const login = "http://127.0.0.1:3030/api/login"
-    const logout = "http://127.0.0.1:3030/api/logout"
+    const register = "http://localhost:3030/api/register"
+    const login = "http://localhost:3030/api/login"
+    const logout = "http://localhost:3030/api/logout"
     const createRoom = "http://localhost:3030/api/ws/create-room"
-    const joinRoom = ref(`ws://localhost:3030/api/ws/join-room/${chatId.value}?userId=${userId}&username=${username}`)
-    const getRooms = "http://127.0.0.1:3030/ws/get-rooms"
+    const joinRoom = ref(`ws://localhost:3030/api/ws/join-room/${chatId.value}`)
+    const createFriend = "http://localhost:3030/api/ws/create-friend"
+    const getFriendReq = "http://localhost:3030/api/ws/get-friend-requests"
+    const getUser = "http://localhost:3030/api/ws/get-user/"
+    const acceptFriend = "http://localhost:3030/api/ws/accept-friend"
+    const rejectFriend = "http://localhost:3030/api/ws/reject-friend"
+    const getFriends = "http://localhost:3030/api/ws/get-friends"
+    const getRooms = "http://localhost:3030/api/ws/get-rooms"
 
     if (localStorage.getItem("darkMode") == "true") {
       darkMode.value = true
@@ -47,7 +51,7 @@ export default {
 
     const setChatId = (id) => {
       chatId.value = id;
-      joinRoom.value = `ws://localhost:3030/api/ws/join-room/${chatId.value}?userId=${userId}&username=${username}`
+      joinRoom.value = `ws://localhost:3030/api/ws/join-room/${chatId.value}`
     };
 
     const changeTheme = (dark) => {
@@ -65,8 +69,13 @@ export default {
     provide("logout", logout)
     provide("createRoom", createRoom)
     provide("joinRoom", joinRoom)
+    provide("createFriend", createFriend)
+    provide("getFriendReq", getFriendReq)
+    provide("getUser", getUser)
+    provide("acceptFriend", acceptFriend)
+    provide("rejectFriend", rejectFriend)
+    provide("getFriends", getFriends)
     provide("getRooms", getRooms)
-
     return { chatId, setChatId, changeTheme, darkMode };
   },
 };

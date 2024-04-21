@@ -99,13 +99,14 @@ export default {
   setup() {
     const userInfo = ref(false)
     const joinRoom = inject("joinRoom")
-    const call = ref(true)
+    const call = ref(false)
     const deafen = ref(false)
     const darkMode = ref(inject("darkMode"))
 
     const websocket = ref(null);
 
     const openWebsocket = () => {
+      console.log(joinRoom.value)
       websocket.value = new WebSocket(joinRoom.value);
       console.log(websocket.value)
       

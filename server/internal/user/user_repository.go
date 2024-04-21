@@ -12,34 +12,34 @@ type DBTX interface {
 	QueryRowContext(context.Context, string, ...interface{}) *sql.Row
 }
 
-type repository struct {
+type RepositoryDb struct {
 	db DBTX
 }
 
 func NewRepository(db DBTX) Repository {
-	return &repository{db: db}
+	return &RepositoryDb{db: db}
 }
 
-func (r *repository) CreateUser(ctx context.Context, user *User) (*User, error) {
-	var lastInsertId int
+func (repository *RepositoryDb) CreateUser(ctx context.Context, user *User) (*User, error) {
+	var createdId uint64
 
 	query := "INSERT INTO public.users(username, password, email) VALUES ($1, $2, $3) returning id"
-	err := r.db.QueryRowContext(ctx, query, user.Username, user.Password, user.Email).Scan(&lastInsertId)
+	err := repository.db.QueryRowContext(ctx, query, user.Username, user.Password, user.Email).Scan(&createdId)
 	if err != nil {
-		return &User{}, err
+		return nil, err
 	}
 
-	user.ID = int64(lastInsertId)
+	user.Id = createdId
 	return user, nil
 }
 
-func (r *repository) GetUserByEmail(ctx context.Context, email string) (*User, error) {
-	u := User{}
+func (repository *RepositoryDb) GetUserByEmail(ctx context.Context, email string) (*User, error) {
+	user := User{}
 	query := "SELECT id, email, username, password FROM public.users WHERE email = $1"
-	err := r.db.QueryRowContext(ctx, query, email).Scan(&u.ID, &u.Email, &u.Username, &u.Password)
+	err := repository.db.QueryRowContext(ctx, query, email).Scan(&user.Id, &user.Email, &user.Username, &user.Password)
 	if err != nil {
-		return &User{}, nil
+		return nil, err
 	}
 
-	return &u, nil
+	return &user, nil
 }

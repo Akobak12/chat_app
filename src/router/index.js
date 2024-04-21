@@ -63,14 +63,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem("isAuth") == "false") {
-      next({ name: 'login' })
+    console.log(localStorage.getItem("isAuth"));
+    if (localStorage.getItem("isAuth") === "false" || localStorage.getItem("isAuth") === null) {
+      next({ name: 'login' });
     } else {
-      next() 
+      next();
     }
   } else {
-    next()
+    next();
   }
-})
+});
+
 
 export default router

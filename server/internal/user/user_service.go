@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"errors"
+	"server/db"
 	"server/util"
 	"strconv"
 	"time"
@@ -16,12 +18,14 @@ const (
 type service struct {
 	Repository
 	timeout time.Duration
+	db      db.Database
 }
 
-func NewService(repository Repository) Service {
+func NewService(repository Repository, database db.Database) Service {
 	return &service{
 		repository,
 		time.Duration(2) * time.Second,
+		database,
 	}
 }
 
@@ -46,7 +50,7 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 	}
 
 	res := &CreateUserRes{
-		ID:       strconv.Itoa(int(r.ID)),
+		ID:       strconv.Itoa(int(r.Id)),
 		Username: r.Username,
 		Email:    r.Email,
 	}
@@ -55,7 +59,7 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 }
 
 type MyJWTClaims struct {
-	ID       string `json:"id"`
+	Id       uint64 `json:"id"`
 	Username string `json:"username"`
 	jwt.RegisteredClaims
 }
@@ -64,21 +68,21 @@ func (s *service) Login(c context.Context, req *LoginUserReq) (*LoginUserRes, er
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
 
-	u, err := s.Repository.GetUserByEmail(ctx, req.Email)
+	user, err := s.Repository.GetUserByEmail(ctx, req.Email)
 	if err != nil {
 		return &LoginUserRes{}, err
 	}
 
-	err = util.CheckPassword(req.Password, u.Password)
+	err = util.CheckPassword(req.Password, user.Password)
 	if err != nil {
 		return &LoginUserRes{}, err
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJWTClaims{
-		ID:       strconv.Itoa(int(u.ID)),
-		Username: u.Username,
+		Id:       user.Id,
+		Username: user.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    strconv.Itoa(int(u.ID)),
+			Issuer:    strconv.Itoa(int(user.Id)),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},
 	})
@@ -88,5 +92,31 @@ func (s *service) Login(c context.Context, req *LoginUserReq) (*LoginUserRes, er
 		return &LoginUserRes{}, err
 	}
 
-	return &LoginUserRes{accessToken: ss, Username: u.Username, ID: strconv.Itoa(int(u.ID))}, nil
+	return &LoginUserRes{AccessToken: ss, Username: user.Username, ID: strconv.Itoa(int(user.Id))}, nil
+}
+
+func (svc *service) getUserById(id uint64) (*User, error) {
+	user := &User{}
+	row := svc.db.GetDB().QueryRow("SELECT id, username, email, password FROM public.users WHERE id = $1", id)
+	err := row.Scan(&user.Id, &user.Username, &user.Email, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (svc *service) GetUserByJWT(token string) (*User, error) {
+	var claims MyJWTClaims
+	jwtToken, err := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secretKey), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if !jwtToken.Valid {
+		return nil, errors.New("invalid token")
+	}
+
+	return svc.getUserById(claims.Id)
 }

@@ -34,12 +34,11 @@ export default {
           password: credentials.value.password,
         });
         console.log("Login successful:", response);
-        localStorage.setItem("token", response.data.token)
+        document.cookie = `jwt=${response.data.accessToken}; path=/; secure; SameSite=none`;
         localStorage.setItem("isAuth", true)
         localStorage.setItem("userID", response.data.id)
         localStorage.setItem("username", response.data.username)
 
-        console.log("bruh", localStorage.getItem("username"))
         router.push({ name: "homepage" })
       } catch (error) {
         console.error("Login failed:", error);

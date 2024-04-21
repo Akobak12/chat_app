@@ -3,7 +3,7 @@ package user
 import "context"
 
 type User struct {
-	ID       int64  `json:"id"`
+	Id       uint64 `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -27,7 +27,7 @@ type LoginUserReq struct {
 }
 
 type LoginUserRes struct {
-	accessToken string
+	AccessToken string `json:"accessToken"` // Capitalize and add json tag to include in JSON response
 	ID          string `json:"id"`
 	Username    string `json:"username"`
 }
@@ -40,4 +40,5 @@ type Repository interface {
 type Service interface {
 	CreateUser(c context.Context, req *CreateUserReq) (*CreateUserRes, error)
 	Login(c context.Context, req *LoginUserReq) (*LoginUserRes, error)
+	GetUserByJWT(jwt string) (*User, error)
 }
